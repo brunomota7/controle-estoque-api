@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "tb_products")
+@Table(name = "tb_produtos")
 @Data
 @Builder
 @AllArgsConstructor
@@ -29,12 +29,12 @@ public class Produto {
     private String descricao;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Categoria categoria;
 
     @Column(nullable = false)
     private BigDecimal precoUnitario;
 
-    @Column(nullable = false)
     private Integer quantEstoque;
 
     @Column(unique = true, nullable = false)
