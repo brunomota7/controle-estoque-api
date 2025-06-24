@@ -2,6 +2,7 @@ package com.bruno.controle_estoque.controller;
 
 import com.bruno.controle_estoque.dto.request.MovementRequestDTO;
 import com.bruno.controle_estoque.dto.response.MovementResponseDTO;
+import com.bruno.controle_estoque.dto.response.ProductStockResponseDTO;
 import com.bruno.controle_estoque.service.MovementStockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -51,6 +52,20 @@ public class MovementStockController {
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(movementStockService.getProductMovementHistory(productId));
+    }
+
+    @GetMapping("/produto/{productId}")
+    public ResponseEntity<ProductStockResponseDTO> getQuantityStockProducts(
+            @PathVariable Long productId
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(movementStockService.getQuantityStockProducts(productId));
+    }
+
+    @GetMapping("/baixo")
+    public ResponseEntity<List<ProductStockResponseDTO>> getAllProductsWhithLowStock() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(movementStockService.getAllProductsWhithLowStock());
     }
 
 }

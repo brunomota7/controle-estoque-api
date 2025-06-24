@@ -2,10 +2,12 @@ package com.bruno.controle_estoque.service;
 
 import com.bruno.controle_estoque.dto.request.MovementRequestDTO;
 import com.bruno.controle_estoque.dto.response.MovementResponseDTO;
+import com.bruno.controle_estoque.dto.response.ProductStockResponseDTO;
 import com.bruno.controle_estoque.enums.TypeMovement;
 import com.bruno.controle_estoque.exceptions.ProductNotFoundException;
 import com.bruno.controle_estoque.exceptions.StockMovementException;
 import com.bruno.controle_estoque.mapper.MovementMapper;
+import com.bruno.controle_estoque.mapper.ProductStockMapper;
 import com.bruno.controle_estoque.model.MovementStock;
 import com.bruno.controle_estoque.model.Product;
 import com.bruno.controle_estoque.repository.MovementRepository;
@@ -91,6 +93,20 @@ public class MovementStockService {
         return movementRepository.findByProduct(product)
                 .stream()
                 .map(MovementMapper::toDTO)
+                .toList();
+    }
+
+    public ProductStockResponseDTO getQuantityStockProducts(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Produto de ID " + id + " não encontrado."));
+
+        return ProductStockMapper.toDTO(product);
+    }
+
+    public List<ProductStockResponseDTO> getAllProductsWhithLowStock() {
+        return movementRepository.productsWhithLowStock()
+                .stream()
+                .map(ProductStockMapper::toDTO)
                 .toList();
     }
 
