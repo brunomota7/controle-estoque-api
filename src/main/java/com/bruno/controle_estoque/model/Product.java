@@ -1,6 +1,6 @@
 package com.bruno.controle_estoque.model;
 
-import com.bruno.controle_estoque.enums.Categoria;
+import com.bruno.controle_estoque.enums.Category;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,33 +16,33 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Produto {
+public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String nome;
+    private String name;
 
     @Column(nullable = false)
-    private String descricao;
+    private String description;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Categoria categoria;
+    private Category category;
 
     @Column(nullable = false)
-    private BigDecimal precoUnitario;
+    private BigDecimal unitPrice;
 
-    private Integer quantEstoque;
+    private Integer quantStock;
 
     @Column(unique = true, nullable = false)
     private String sku;
 
     @Column(nullable = false)
-    private LocalDateTime dataCadastro;
-    private LocalDateTime ultimaAtualizacao;
+    private LocalDateTime dateRegistration;
 
+    private LocalDateTime lastUpdate;
 
 }

@@ -1,7 +1,6 @@
 package com.bruno.controle_estoque.dto.request;
 
-import com.bruno.controle_estoque.enums.Categoria;
-import jakarta.validation.constraints.Min;
+import com.bruno.controle_estoque.enums.Category;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -11,27 +10,28 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
-public class ProdutoRequestDTO {
+public class ProductRequestDTO {
     
     @NotNull
-    private String nome;
+    private String name;
 
     @NotNull
-    private String descricao;
+    private String description;
 
     @NotNull
-    private Categoria categoria;
+    private Category category;
     
     @Positive
     @NotNull
-    private BigDecimal precoUnitario;
+    private BigDecimal unitPrice;
     
     @PositiveOrZero
-    private Integer quantEstoque;
+    private Integer quantStock;
     
     @NotNull
     private String sku;
     
     @NotNull
-    private LocalDateTime dataCadastro;
+    private LocalDateTime dateRegistration;
+
 }

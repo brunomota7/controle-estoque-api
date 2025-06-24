@@ -1,6 +1,6 @@
 package com.bruno.controle_estoque.enums;
 
-public enum TipoMovimentacao {
+public enum TypeMovement {
     ENTRADA,
     SAIDA
 }

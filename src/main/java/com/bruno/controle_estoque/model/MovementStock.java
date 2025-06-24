@@ -1,6 +1,6 @@
 package com.bruno.controle_estoque.model;
 
-import com.bruno.controle_estoque.enums.TipoMovimentacao;
+import com.bruno.controle_estoque.enums.TypeMovement;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,22 +15,22 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MovimentacaoEstoque {
+public class MovementStock {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private Produto produto;
+    private Product product;
 
     @Column(nullable = false)
-    private TipoMovimentacao tipoMovimentacao;
+    private TypeMovement typeMovement;
 
     @Column(nullable = false)
-    private Integer quantidade;
+    private Integer amount;
 
     @Column(nullable = false)
-    private LocalDateTime dataMovimentacao;
+    private LocalDateTime dataMovement;
 
 }
