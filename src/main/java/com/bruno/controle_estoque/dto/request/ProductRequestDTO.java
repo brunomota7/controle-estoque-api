@@ -30,8 +30,7 @@ public class ProductRequestDTO {
     
     @NotNull
     private String sku;
-    
-    @NotNull
+
     private LocalDateTime dateRegistration;
 
 }

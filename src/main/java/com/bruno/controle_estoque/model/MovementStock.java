@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "tb_movimentacao_estoque")
+@Table(name = "tb_movement_stock")
 @Data
 @Builder
 @AllArgsConstructor
@@ -21,7 +21,8 @@ public class MovementStock {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
     @Column(nullable = false)

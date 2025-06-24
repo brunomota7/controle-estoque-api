@@ -8,7 +8,11 @@ public class MovementMapper {
     public static MovementResponseDTO toDTO(MovementStock movementStock) {
         var builder = MovementResponseDTO.builder()
                 .id(movementStock.getId())
-                .product(movementStock.getProduct())
+                .product(MovementResponseDTO.ProductInfos.builder()
+                        .id(movementStock.getProduct().getId())
+                        .name(movementStock.getProduct().getName())
+                        .build()
+                )
                 .typeMovement(movementStock.getTypeMovement())
                 .amount(movementStock.getAmount())
                 .dataMovement(movementStock.getDataMovement());

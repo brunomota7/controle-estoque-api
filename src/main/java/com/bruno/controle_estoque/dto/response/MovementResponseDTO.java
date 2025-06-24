@@ -15,8 +15,18 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class MovementResponseDTO {
     private Long id;
-    private Product product;
+    private ProductInfos product;
     private TypeMovement typeMovement;
     private Integer amount;
     private LocalDateTime dataMovement;
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ProductInfos {
+        private Long id;
+        private String name;
+    }
+
 }
