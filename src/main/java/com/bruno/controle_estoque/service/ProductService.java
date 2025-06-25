@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class ProductService {
@@ -38,7 +37,6 @@ public class ProductService {
         productRepository.save(product);
     }
 
-    // Obter produtos com paginacao
     public Page<ProductResponseDTO> searchProducts(
             String name,
             Category category,
@@ -47,7 +45,8 @@ public class ProductService {
             Integer minStock,
             Pageable pageable
     ) {
-        return productRepository.filterToSearchProducts(name, category, minPrice, maxPrice, minStock, pageable)
+        return productRepository.filterToSearchProducts(
+                name, category, minPrice, maxPrice, minStock, pageable)
                 .map(ProductMapper::toDTO);
     }
 
