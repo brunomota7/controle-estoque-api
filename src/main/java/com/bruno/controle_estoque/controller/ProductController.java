@@ -2,13 +2,18 @@ package com.bruno.controle_estoque.controller;
 
 import com.bruno.controle_estoque.dto.request.ProductRequestDTO;
 import com.bruno.controle_estoque.dto.response.ProductResponseDTO;
+import com.bruno.controle_estoque.enums.Category;
 import com.bruno.controle_estoque.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -25,9 +30,18 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponseDTO>> getAllProducts() {
+    public ResponseEntity<Page<ProductResponseDTO>> getAllProducts(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Category category,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) Integer minStock,
+            @PageableDefault(page = 0, size = 5, sort = "name") Pageable pageable
+    ) {
+        Page<ProductResponseDTO> productsPage = productService.searchProducts(
+                name, category, minPrice, maxPrice, minStock, pageable);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(productService.getAllProducts());
+                .body(productsPage);
     }
 
     @GetMapping("/{id}")

@@ -2,14 +2,18 @@ package com.bruno.controle_estoque.service;
 
 import com.bruno.controle_estoque.dto.request.ProductRequestDTO;
 import com.bruno.controle_estoque.dto.response.ProductResponseDTO;
+import com.bruno.controle_estoque.enums.Category;
 import com.bruno.controle_estoque.exceptions.ProductNotFoundException;
 import com.bruno.controle_estoque.mapper.ProductMapper;
 import com.bruno.controle_estoque.model.Product;
 import com.bruno.controle_estoque.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -34,11 +38,17 @@ public class ProductService {
         productRepository.save(product);
     }
 
-    public List<ProductResponseDTO> getAllProducts() {
-        return productRepository.findAll()
-                .stream()
-                .map(ProductMapper::toDTO)
-                .toList();
+    // Obter produtos com paginacao
+    public Page<ProductResponseDTO> searchProducts(
+            String name,
+            Category category,
+            BigDecimal minPrice,
+            BigDecimal maxPrice,
+            Integer minStock,
+            Pageable pageable
+    ) {
+        return productRepository.filterToSearchProducts(name, category, minPrice, maxPrice, minStock, pageable)
+                .map(ProductMapper::toDTO);
     }
 
     public ProductResponseDTO getProductById(Long id) {
