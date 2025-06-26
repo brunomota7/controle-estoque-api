@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -18,6 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/produtos")
+@PreAuthorize("hasRole('GERENTE_ESTOQUE')")
 public class ProductController {
 
     @Autowired
@@ -35,11 +37,10 @@ public class ProductController {
             @RequestParam(required = false) Category category,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
-            @RequestParam(required = false) Integer minStock,
             @PageableDefault(page = 0, size = 5, sort = "name") Pageable pageable
     ) {
         Page<ProductResponseDTO> productsPage = productService.searchProducts(
-                name, category, minPrice, maxPrice, minStock, pageable);
+                name, category, minPrice, maxPrice, pageable);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(productsPage);
     }
@@ -50,6 +51,12 @@ public class ProductController {
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(productService.getProductById(id));
+    }
+
+    @GetMapping("/low-stock")
+    public ResponseEntity<Page<ProductResponseDTO>> getLowStockProducts(Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(productService.getLowStockProducts(pageable));
     }
 
     @PutMapping("/{id}")
