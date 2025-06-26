@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/produtos")
-@PreAuthorize("hasRole('GERENTE_ESTOQUE')")
+@PreAuthorize("hasRole('GERENTE_ESTOQUE') or hasRole('ADMIN')")
 public class ProductController {
 
     @Autowired
@@ -51,12 +51,6 @@ public class ProductController {
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(productService.getProductById(id));
-    }
-
-    @GetMapping("/low-stock")
-    public ResponseEntity<Page<ProductResponseDTO>> getLowStockProducts(Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(productService.getLowStockProducts(pageable));
     }
 
     @PutMapping("/{id}")

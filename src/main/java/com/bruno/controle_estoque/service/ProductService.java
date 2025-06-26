@@ -22,8 +22,6 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    private static final int LOW_STOCK_LIMIT = 10;
-
     @Transactional
     public void addNewProduct(ProductRequestDTO dto) {
         Product product = Product.builder()
@@ -56,11 +54,6 @@ public class ProductService {
                 .orElseThrow(() -> new ProductNotFoundException("Produto de ID " + id + " não encontrado!"));
 
         return ProductMapper.toDTO(product);
-    }
-
-    public Page<ProductResponseDTO> getLowStockProducts(Pageable pageable) {
-        return productRepository.findByQuantStockLessThanEqual(LOW_STOCK_LIMIT, pageable)
-                .map(ProductMapper::toDTO);
     }
 
     public void updateProducts(Long id, ProductRequestDTO dto) {

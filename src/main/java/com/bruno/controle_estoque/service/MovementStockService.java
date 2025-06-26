@@ -2,11 +2,13 @@ package com.bruno.controle_estoque.service;
 
 import com.bruno.controle_estoque.dto.request.MovementRequestDTO;
 import com.bruno.controle_estoque.dto.response.MovementResponseDTO;
+import com.bruno.controle_estoque.dto.response.ProductResponseDTO;
 import com.bruno.controle_estoque.dto.response.ProductStockResponseDTO;
 import com.bruno.controle_estoque.enums.TypeMovement;
 import com.bruno.controle_estoque.exceptions.ProductNotFoundException;
 import com.bruno.controle_estoque.exceptions.StockMovementException;
 import com.bruno.controle_estoque.mapper.MovementMapper;
+import com.bruno.controle_estoque.mapper.ProductMapper;
 import com.bruno.controle_estoque.mapper.ProductStockMapper;
 import com.bruno.controle_estoque.model.MovementStock;
 import com.bruno.controle_estoque.model.Product;
@@ -14,6 +16,8 @@ import com.bruno.controle_estoque.repository.MovementRepository;
 import com.bruno.controle_estoque.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -27,6 +31,8 @@ public class MovementStockService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    private static final int LOW_STOCK_LIMIT = 10;
 
     @Transactional
     public void registerEntry(MovementRequestDTO dto) {
@@ -103,11 +109,10 @@ public class MovementStockService {
         return ProductStockMapper.toDTO(product);
     }
 
-    public List<ProductStockResponseDTO> getAllProductsWhithLowStock() {
-        return movementRepository.productsWhithLowStock()
-                .stream()
-                .map(ProductStockMapper::toDTO)
-                .toList();
+
+    public Page<ProductResponseDTO> getLowStockProducts(Pageable pageable) {
+        return productRepository.findByQuantStockLessThanEqual(LOW_STOCK_LIMIT, pageable)
+                .map(ProductMapper::toDTO);
     }
 
 }

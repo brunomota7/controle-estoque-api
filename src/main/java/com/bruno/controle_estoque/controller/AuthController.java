@@ -1,6 +1,6 @@
 package com.bruno.controle_estoque.controller;
 
-import com.bruno.controle_estoque.dto.request.AuthRequestDTO;
+import com.bruno.controle_estoque.dto.request.RegisterRequestDTO;
 import com.bruno.controle_estoque.dto.request.LoginRequestDTO;
 import com.bruno.controle_estoque.dto.response.AuthResponseDTO;
 import com.bruno.controle_estoque.enums.Roles;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
     @Autowired
@@ -23,14 +23,8 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> newRegister(
-            @RequestBody @Valid AuthRequestDTO dto
+            @RequestBody @Valid RegisterRequestDTO dto
     ) {
-        if (dto.getRole() == Roles.ADMIN) {
-            return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body("Não é permitido se registrar como ADMIN.");
-        }
-
         authService.newRegister(dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

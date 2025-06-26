@@ -1,8 +1,9 @@
 package com.bruno.controle_estoque.service;
 
-import com.bruno.controle_estoque.dto.request.AuthRequestDTO;
+import com.bruno.controle_estoque.dto.request.RegisterRequestDTO;
 import com.bruno.controle_estoque.dto.request.LoginRequestDTO;
 import com.bruno.controle_estoque.dto.response.AuthResponseDTO;
+import com.bruno.controle_estoque.enums.Roles;
 import com.bruno.controle_estoque.exceptions.ExistingUserException;
 import com.bruno.controle_estoque.exceptions.InvalidPasswordException;
 import com.bruno.controle_estoque.model.Users;
@@ -25,14 +26,14 @@ public class AuthService {
     private final JwtUtil jwtUtil;
 
     @Transactional
-    public void newRegister(AuthRequestDTO dto) {
+    public void newRegister(RegisterRequestDTO dto) {
         if (usersRepository.findByUsername(dto.getUsername()).isPresent())
             throw new ExistingUserException("Já existe um usuário cadastrado com esse username. Tente novamente com um novo email.");
 
         Users user = Users.builder()
                 .username(dto.getUsername())
                 .password(passwordEncoder.encode(dto.getPassword()))
-                .role(dto.getRole())
+                .role(Roles.VISUALIZADOR)
                 .build();
 
         usersRepository.save(user);
