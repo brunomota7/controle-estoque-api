@@ -1,10 +1,13 @@
 package com.bruno.controle_estoque.service;
 
+import com.bruno.controle_estoque.dto.response.MovementResponseDTO;
 import com.bruno.controle_estoque.dto.response.ProductResponseDTO;
 import com.bruno.controle_estoque.enums.Category;
 import com.bruno.controle_estoque.enums.Roles;
+import com.bruno.controle_estoque.enums.TypeMovement;
 import com.bruno.controle_estoque.exceptions.InvalidRoleException;
 import com.bruno.controle_estoque.exceptions.ProductNotFoundException;
+import com.bruno.controle_estoque.mapper.MovementMapper;
 import com.bruno.controle_estoque.mapper.ProductMapper;
 import com.bruno.controle_estoque.model.Product;
 import com.bruno.controle_estoque.model.Users;
@@ -16,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 public class ViewerService {
@@ -31,26 +35,45 @@ public class ViewerService {
             BigDecimal maxPrice,
             Pageable pageable
     ) {
-        Users authenticatedUser = authService.getUserAuthenticated();
-
-        if (authenticatedUser.getRole() != Roles.VISUALIZADOR)
-            throw new InvalidRoleException("Você não tem permissão para visualizar os produtos!");
-
         return productRepository.filterToSearchProducts(
                 name, category, minPrice, maxPrice, pageable)
                 .map(ProductMapper::toDTO);
     }
 
     public ProductResponseDTO detailProducts(Long id) {
-        Users authenticatedUser = authService.getUserAuthenticated();
-
-        if (authenticatedUser.getRole() != Roles.VISUALIZADOR)
-            throw new InvalidRoleException("Você não tem permissão para visualizar detalhes do produto!");
-
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Produto de ID " + id + " não encontrado!"));
 
         return ProductMapper.toDTO(product);
+    }
+
+    public Page<ProductResponseDTO> getAllProductsLowStock(Pageable pageable) {
+        return movementRepository.productsWhithLowStock(pageable)
+                .map(ProductMapper::toDTO);
+    }
+
+    public List<MovementResponseDTO> getAllMovementsEntry() {
+        return movementRepository.findByTypeMovement(TypeMovement.ENTRADA)
+                .stream()
+                .map(MovementMapper::toDTO)
+                .toList();
+    }
+
+    public List<MovementResponseDTO> getAllMovementsExit() {
+        return movementRepository.findByTypeMovement(TypeMovement.SAIDA)
+                .stream()
+                .map(MovementMapper::toDTO)
+                .toList();
+    }
+
+    public List<MovementResponseDTO> getProductMovementHistory(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Produto de ID " + id + " não encontrado!"));
+
+        return movementRepository.findByProduct(product)
+                .stream()
+                .map(MovementMapper::toDTO)
+                .toList();
     }
 
 }

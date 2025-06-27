@@ -1,5 +1,6 @@
 package com.bruno.controle_estoque.controller;
 
+import com.bruno.controle_estoque.dto.response.MovementResponseDTO;
 import com.bruno.controle_estoque.dto.response.ProductResponseDTO;
 import com.bruno.controle_estoque.enums.Category;
 import com.bruno.controle_estoque.enums.Roles;
@@ -19,6 +20,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/viewer")
@@ -47,6 +49,34 @@ public class ViewerController {
     ) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(viewerService.detailProducts(id));
+    }
+
+    @GetMapping("/low-stock")
+    public ResponseEntity<Page<ProductResponseDTO>> getAllProductsLowStock(
+            @PageableDefault(page = 0, size = 10, sort = "name") Pageable pageable
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(viewerService.getAllProductsLowStock(pageable));
+    }
+
+    @GetMapping("/stock-entry")
+    public ResponseEntity<List<MovementResponseDTO>> getAllMovementsEntry() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(viewerService.getAllMovementsEntry());
+    }
+
+    @GetMapping("/stock-exit")
+    public ResponseEntity<List<MovementResponseDTO>> getAllMovementsExit() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(viewerService.getAllMovementsExit());
+    }
+
+    @GetMapping("/movement-history/{productId}")
+    public ResponseEntity<List<MovementResponseDTO>> getProductMovementHistory(
+            @PathVariable Long productId
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(viewerService.getProductMovementHistory(productId));
     }
 
 }

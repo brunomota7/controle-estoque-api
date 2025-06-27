@@ -16,14 +16,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/estoque")
+@RequestMapping("/api/stock")
 @PreAuthorize("hasRole('GERENTE_ESTOQUE') or hasRole('ADMIN')")
 public class MovementStockController {
 
     @Autowired
     private MovementStockService movementStockService;
 
-    @PostMapping("/entrada")
+    @PostMapping("/entry")
     public ResponseEntity<?> registerEntry(
             @RequestBody MovementRequestDTO dto
     ) {
@@ -31,7 +31,7 @@ public class MovementStockController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PostMapping("/saida")
+    @PostMapping("/exit")
     public ResponseEntity<?> registerExit(
             @RequestBody MovementRequestDTO dto
     ) {
@@ -39,19 +39,19 @@ public class MovementStockController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/entrada")
+    @GetMapping("/entry")
     public ResponseEntity<List<MovementResponseDTO>> getAllMovementsToEntry() {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(movementStockService.getAllMovementsToEntry());
     }
 
-    @GetMapping("/saida")
+    @GetMapping("/exit")
     public ResponseEntity<List<MovementResponseDTO>> getAllMovementToExit() {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(movementStockService.getAllMovementToExit());
     }
 
-    @GetMapping("/produto/{productId}/historico")
+    @GetMapping("/product/{productId}/history")
     public ResponseEntity<List<MovementResponseDTO>> getProductMovementHistory(
             @PathVariable Long productId
     ) {
@@ -59,7 +59,7 @@ public class MovementStockController {
                 .body(movementStockService.getProductMovementHistory(productId));
     }
 
-    @GetMapping("/produto/{productId}")
+    @GetMapping("/product/{productId}")
     public ResponseEntity<ProductStockResponseDTO> getQuantityStockProducts(
             @PathVariable Long productId
     ) {
