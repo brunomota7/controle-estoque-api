@@ -36,7 +36,7 @@ public class AdminController {
                 .body(adminService.getUserById(id));
     }
 
-    @PutMapping("/promover")
+    @PutMapping("/promote")
     public ResponseEntity<?> promoteUser(
             @RequestBody @Valid PromoteRequestDTO dto
     ) throws AccessDeniedException {

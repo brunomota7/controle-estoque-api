@@ -1,10 +1,14 @@
 package com.bruno.controle_estoque.controller;
 
-import com.bruno.controle_estoque.dto.request.ProductRequestDTO;
 import com.bruno.controle_estoque.dto.response.ProductResponseDTO;
 import com.bruno.controle_estoque.enums.Category;
+import com.bruno.controle_estoque.enums.Roles;
+import com.bruno.controle_estoque.exceptions.InvalidRoleException;
+import com.bruno.controle_estoque.model.Users;
+import com.bruno.controle_estoque.service.AuthService;
+import com.bruno.controle_estoque.service.MovementStockService;
 import com.bruno.controle_estoque.service.ProductService;
-import jakarta.validation.Valid;
+import com.bruno.controle_estoque.service.ViewerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,23 +19,15 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @RestController
-@RequestMapping("/api/products")
-@PreAuthorize("hasRole('GERENTE_ESTOQUE') or hasRole('ADMIN')")
-public class ProductController {
+@RequestMapping("/api/viewer")
+@PreAuthorize("hasRole('VISUALIZADOR')")
+public class ViewerController {
 
-    @Autowired
-    private ProductService productService;
+    @Autowired private ViewerService viewerService;
 
-    @PostMapping
-    public ResponseEntity<?> addNewProduct(@RequestBody @Valid ProductRequestDTO dto) {
-        productService.addNewProduct(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
-    @GetMapping
+    @GetMapping("/products")
     public ResponseEntity<Page<ProductResponseDTO>> getAllProducts(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Category category,
@@ -39,35 +35,18 @@ public class ProductController {
             @RequestParam(required = false) BigDecimal maxPrice,
             @PageableDefault(page = 0, size = 5, sort = "name") Pageable pageable
     ) {
-        Page<ProductResponseDTO> productsPage = productService.searchProducts(
+        Page<ProductResponseDTO> productsPage = viewerService.viewProducts(
                 name, category, minPrice, maxPrice, pageable);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(productsPage);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductResponseDTO> getProductById(
+    @GetMapping("/products-detail")
+    public ResponseEntity<ProductResponseDTO> detailProducts(
             @PathVariable Long id
     ) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(productService.getProductById(id));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateProduct(
-            @PathVariable Long id,
-            @RequestBody ProductRequestDTO dto
-    ) {
-        productService.updateProducts(id, dto);
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteProduct(
-            @PathVariable Long id
-    ) {
-        productService.deleteProduct(id);
-        return ResponseEntity.status(HttpStatus.OK).build();
+                .body(viewerService.detailProducts(id));
     }
 
 }
