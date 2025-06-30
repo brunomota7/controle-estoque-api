@@ -28,7 +28,7 @@ public class AuthService {
     @Transactional
     public void newRegister(RegisterRequestDTO dto) {
         if (usersRepository.findByUsername(dto.getUsername()).isPresent())
-            throw new ExistingUserException("Já existe um usuário cadastrado com esse username. Tente novamente com um novo email.");
+            throw new ExistingUserException("Já existe um usuário cadastrado com esse username. Tente novamente com um novo username.");
 
         Users user = Users.builder()
                 .username(dto.getUsername())

@@ -28,7 +28,7 @@ public class AdminService {
         Users authenticatedUser = authService.getUserAuthenticated();
 
         if (authenticatedUser.getRole() != Roles.ADMIN) {
-            throw new AccessDeniedException("Apenas administradores podem promover usuários.");
+            throw new AccessDeniedException("Apenas administradores podem listar usuários.");
         }
 
         return usersRepository.findAll()
@@ -41,7 +41,7 @@ public class AdminService {
         Users authenticatedUser = authService.getUserAuthenticated();
 
         if (authenticatedUser.getRole() != Roles.ADMIN) {
-            throw new AccessDeniedException("Apenas administradores podem promover usuários.");
+            throw new AccessDeniedException("Apenas administradores podem buscar por usuários.");
         }
 
         Users user = usersRepository.findById(id)
