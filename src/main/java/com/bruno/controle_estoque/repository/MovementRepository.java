@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface MovementRepository extends JpaRepository<MovementStock, Long> {
@@ -16,4 +18,6 @@ public interface MovementRepository extends JpaRepository<MovementStock, Long> {
 
     @Query("SELECT p FROM Product p WHERE p.quantStock <= 10")
     Page<Product> productsWhithLowStock(Pageable pageable);
+
+    List<MovementStock> findByDataMovementBetween(LocalDateTime start, LocalDateTime end);
 }
