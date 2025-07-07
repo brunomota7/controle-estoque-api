@@ -43,7 +43,7 @@ public class ViewerController {
                 .body(productsPage);
     }
 
-    @GetMapping("/products-detail")
+    @GetMapping("/products-detail/{id}")
     public ResponseEntity<ProductResponseDTO> detailProducts(
             @PathVariable Long id
     ) {

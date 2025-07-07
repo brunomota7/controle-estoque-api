@@ -59,12 +59,12 @@ public class MovementStockController {
                 .body(movementStockService.getProductMovementHistory(productId));
     }
 
-    @GetMapping("/product/{productId}")
+    @GetMapping("/product/{id}")
     public ResponseEntity<ProductStockResponseDTO> getQuantityStockProducts(
-            @PathVariable Long productId
+            @PathVariable Long id
     ) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(movementStockService.getQuantityStockProducts(productId));
+                .body(movementStockService.getQuantityStockProducts(id));
     }
 
     @GetMapping("/low-stock")
