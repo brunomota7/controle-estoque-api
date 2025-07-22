@@ -11,12 +11,14 @@ import com.bruno.controle_estoque.repository.UsersRepository;
 import com.bruno.controle_estoque.utils.JwtUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -36,6 +38,8 @@ public class AuthService {
                 .role(Roles.VISUALIZADOR)
                 .build();
 
+        log.info("Novo usuário cadastrado, nusername: '{}'.", user.getUsername());
+
         usersRepository.save(user);
     }
 
@@ -43,8 +47,9 @@ public class AuthService {
         Users user = usersRepository.findByUsername(dto.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado. Tente novamente."));
 
-        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword()))
+        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())){
             throw new InvalidPasswordException("Senha inválida. Tente novamente.");
+        }
 
         String token = jwtUtil.generateToken(user);
 
