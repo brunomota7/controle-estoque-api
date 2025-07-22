@@ -49,7 +49,7 @@ public class AdminController {
             @RequestBody @Valid PromoteRequestDTO dto
     ) throws AccessDeniedException {
 
-        log.info("Requisição PUT recebida na rota de /api/admin/promote. Usuário promovido: {}", dto.getUsername());
+        log.info("Requisição PUT recebida na rota de /api/admin/promote.", dto.getUsername());
 
         adminService.promoteUser(dto);
         return ResponseEntity.status(HttpStatus.OK)
