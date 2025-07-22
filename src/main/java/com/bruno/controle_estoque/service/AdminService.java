@@ -100,11 +100,14 @@ public class AdminService {
         Users authenticatedUser = authService.getUserAuthenticated();
 
         if (authenticatedUser.getRole() != Roles.ADMIN) {
+            log.error("'{}' tentou excluír um usuário, mas não tem autorização.", authenticatedUser.getUsername());
             throw new AccessDeniedException("Apenas administradores podem excluír usuários.");
         }
 
         Users user = usersRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado. Tente novamente!"));
+
+        log.info("Admin '{}', excluiu o usuário de ID '{}', nome: '{}'", authenticatedUser.getUsername(), id, user.getUsername());
 
         usersRepository.delete(user);
     }
